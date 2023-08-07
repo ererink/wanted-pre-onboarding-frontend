@@ -56,9 +56,11 @@ function SigninInput(){
             });
             console.log(response);
             window.alert("로그인 성공!");
-            // 로그인 성공시 /todo 페이지로 이동
-            navigate('/todo');
 
+            // 로그인 성공시 /todo 페이지로 이동            
+            navigate('/todo');
+            
+            
         } catch (error) {
             console.log(error.message);
         }

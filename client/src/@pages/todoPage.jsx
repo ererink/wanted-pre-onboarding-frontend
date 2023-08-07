@@ -1,9 +1,10 @@
 import React from 'react';
+import TodoList from '../@components/tosoList';
 
 function TodoPage() {
     return(
         <>
-            <h1>Todo</h1>
+            <TodoList />
         </>
     )
 }

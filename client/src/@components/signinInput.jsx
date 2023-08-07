@@ -2,49 +2,43 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 
-function SignupInput(){
+function SigninInput(){
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
 
     const handleEmailChange = (event) => {
         setEmail(event.target.value);
-        console.log("handleEmailChange")
-    };
+    }
 
     const handlePasswordChange = (event) => {
         setPassword(event.target.value);
-        console.log("handlePasswordChange")
-    };
+    }
 
-    const handleSignUp = async (event) => {
+    const handleSignIn = async (event) => {
         event.preventDefault();
-    
+
         try {
-            const response = await fetch('/auth/signup', {
+            const response = await fetch('/auth/signin',{
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password }),
             });
-    
             console.log(response);
-            window.alert("회원가입 성공!");
-            // 회원가입 성공시 /signin 페이지로 이동
-            navigate('/signin');
-            
-            
+            window.alert("로그인 성공!");
+            // 로그인 성공시 /todo 페이지로 이동
+            navigate('/todo');
         } catch (error) {
             console.log(error.message);
         }
-    };
-    
+    }
     return(
         <>
-            <SignupInputWrapper>
-                <h1>Signup</h1>
-                <form onSubmit={handleSignUp}>
+            <SigninInputWrapper>
+                <h1>login</h1>
+                <form onSubmit={handleSignIn}>
                     <div>
-                        email: {''}
+                        Email {''}
                         <input data-testid="email-input"
                                 type="email"
                                 name="user-email"
@@ -53,7 +47,7 @@ function SignupInput(){
                                 onChange={handleEmailChange} />
                     </div>
                     <div>
-                        password: {''}
+                        Password {''}
                         <input data-testid="password-input"
                                 type='password'
                                 name="user-password"
@@ -61,16 +55,15 @@ function SignupInput(){
                                 required
                                 onChange={handlePasswordChange} />
                     </div>
-                    
-                    <button data-testid="signup-button" type="submit" > 회원가입 </button>
+                    <button data-testid="signin-button" type="submit" > 로그인 </button>
                 </form>
-            </SignupInputWrapper>
+            </SigninInputWrapper>
+            
         </>
-        
-    )
+    );
 }
 
-const SignupInputWrapper = styled.div`
+const SigninInputWrapper = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
@@ -81,7 +74,5 @@ const SignupInputWrapper = styled.div`
         display: flex;
         flex-direction: column;
     }
-
 `
-
-export default SignupInput;
+export default SigninInput

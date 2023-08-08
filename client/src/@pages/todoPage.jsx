@@ -5,7 +5,7 @@ function TodoPage() {
     return(
         <>
             <TodoInput onAddTodo={handleAddTodo}/>
-            <TodoList />
+            <TodoList todoItems={todoItems} handleTodoComplete={handleTodoComplete} />
         </>
     )
 }

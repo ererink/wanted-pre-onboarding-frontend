@@ -16,12 +16,6 @@ function TodoList(){
 
     const [todoItems, setTodoItems] = useState([]);
 
-    // 새로운 할 일 추가
-    const handleAddTodo = (todoText) => {
-        
-        setTodoItems([...todoItems, { id: Date.now, text: todoText, completed: false}]);
-    };
-
     // 완료된 할 일 처리
     const handleTodoComplete = (todoId) => {
         const updatedTodoItem = todoItems.map((todo) => 
@@ -37,7 +31,7 @@ function TodoList(){
                {todoItems.map((todo) =>(
                     <TodoItem key={todo.id}>
                         <lable>
-                            <input type='checkboxf'
+                            <input type='checkbox'
                                    checked={todo.completed}
                                    onChange={() => handleTodoComplete(todo.id)}/>
                             <span>{todo.text}</span>

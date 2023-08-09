@@ -6,6 +6,8 @@ function TodoList(){
     const userToken = localStorage.getItem("jwt-token");
     const navigate = useNavigate();
     
+    const [todoItems, setTodoItems] = useState([]);
+
     useEffect(() => {
         // 로그인을 하지 않은 상태로 로그인한 경우 /signin 페이지로 리다이렉트
         if (!userToken) {
@@ -14,7 +16,7 @@ function TodoList(){
         }
       }, [userToken, navigate]);
     console.log(userToken);
-    const [todoItems, setTodoItems] = useState([]);
+    
 
     // 완료된 할 일 처리
     const handleTodoComplete = (todoId) => {

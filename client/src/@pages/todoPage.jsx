@@ -1,23 +1,19 @@
-import React from 'react';
+import React, { useState } from 'react';
 import TodoList from '../@components/todo/todoList';
 import TodoInput from '../@components/todo/todoInput';
 
 function TodoPage() {
-    // const [todoItems, setTodoItems] = useState([]);
+    const [todos, setTodos] = useState([]);
     
-    // const handleAddTodo = (todoText) => {
-    //     const newTodo = {
-    //         id: Date.now(),
-    //         text: todoText,
-    //         isCompleted: false,
-    //     };
-    //     setTodoItems([...todoItems, newTodo]);
-    // };
+    // 할 일 추가 시 호출
+    const handleAddTodo = (newTodo) => {
+        setTodos([...todos, newTodo]);
+    };
 
     return(
         <>
-            <TodoInput />
-            <TodoList />
+            <TodoInput onAddTodo={handleAddTodo}/>
+            <TodoList todos={todos}/>
         </>
     )
 }

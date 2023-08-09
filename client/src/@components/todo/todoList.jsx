@@ -13,7 +13,7 @@ function TodoList(){
             navigate('/signin');
         }
       }, [userToken, navigate]);
-
+    console.log(userToken);
     const [todoItems, setTodoItems] = useState([]);
 
     // 완료된 할 일 처리

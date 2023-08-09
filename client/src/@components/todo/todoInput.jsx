@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 
 function TodoInput(props) {
@@ -17,12 +17,12 @@ function TodoInput(props) {
             const response = await fetch('/todos', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ todo }),
+                body: JSON.stringify({ todoItem }),
             });
 
             window.alert("할 일이 추가되었습니다!");
             setTodoItem(''); // 초기화
-            onTodoAdded(); 
+            // onTodoAdded(); 
 
         } catch (error) {
             console.log(error.message);
@@ -30,7 +30,7 @@ function TodoInput(props) {
         const newTodo = {
             id: Date.now(),
             text: todoItem,
-            completed: false,
+            isCompleted: false,
         };
         // 새로운 할 일 넘겨주기
         props.onAddTodo(newTodo)

@@ -54,13 +54,18 @@ function SigninInput(){
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password }),
             });
-            console.log(response);
-            window.alert("로그인 성공!");
 
-            // 로그인 성공시 /todo 페이지로 이동            
-            navigate('/todo');
-            
-            
+            const responseData = await response.json();
+            if (response.status === 200 && responseData.access_token){
+                // 로그인 시 로컬 스토리지에 토큰 저장
+                localStorage.setItem('jwt-token', responseData.access_token);
+                console.log(responseData);
+                window.alert("로그인 성공!");
+
+                // 로그인 성공시 /todo 페이지로 이동            
+                navigate('/todo');
+            }
+                
         } catch (error) {
             console.log(error.message);
         }

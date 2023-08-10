@@ -2,12 +2,11 @@ import React, { useState, useEffect} from 'react';
 import styled from 'styled-components';
 import { useNavigate } from "react-router-dom";
 
-function TodoList(){
+function TodoList(props){
     const [todoItems, setTodoItems] = useState([]);
     const [isEditing, setIsEditing] = useState(false);
     const [editedItem, setEditedItem] = useState('');
     const [editedItemId, setEditedItemId] = useState(null);
-    const [isChecked, setIsChecked] = useState(false);
     const userToken = localStorage.getItem("jwt-token");
     const navigate = useNavigate();
 
@@ -30,7 +29,7 @@ function TodoList(){
         .catch(error => {
             console.log('API 요청 에러:', error);
         });
-      }, [userToken, navigate]);
+      }, [userToken, navigate, todoItems]);
     
     // 수정 폼 열기
     const handleTodoEdit = (todoId) => {
@@ -113,7 +112,6 @@ function TodoList(){
         }
     }
 
-    console.log("isEditing", isEditing);
     if(isEditing && editedItemId){
         return (
             <TodoListWrapper>

@@ -34,7 +34,6 @@ function TodoInput(props) {
             } else {
                 console.log("할 일이 추가되지 않았어요 :(");
             }
-
         } catch (error) {
             console.log(error.message);
         }

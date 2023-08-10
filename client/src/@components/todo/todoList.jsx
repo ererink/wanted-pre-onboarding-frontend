@@ -4,6 +4,10 @@ import { useNavigate } from "react-router-dom";
 
 function TodoList(){
     const [todoItems, setTodoItems] = useState([]);
+    const [isEditing, setIsEditing] = useState(false);
+    const [editedItem, setEditedItem] = useState('');
+    const [editedItemId, setEditedItemId] = useState(null);
+    const [isChecked, setIsChecked] = useState(false);
     const userToken = localStorage.getItem("jwt-token");
     const navigate = useNavigate();
 
@@ -28,14 +32,43 @@ function TodoList(){
         });
       }, [userToken, navigate]);
     
-    // 완료된 할 일 처리
-    const handleTodoComplete = async (todoId) => {
-        const updatedTodoItem = todoItems.map((todo) => 
-            todo.id === todoId ? { ...todo, isCompleted: !todo.isCompleted } : todo
-        );
+    // 수정 폼 열기
+    const handleTodoEdit = (todoId) => {
+        const todoToEdit = todoItems.find(todo => todo.id === todoId);
+        setEditedItem(todoToEdit.todo);
+        setEditedItemId(todoId);
+        setIsEditing(true);
+    }
+
+    // 수정 input 변경 감지
+    const handleUpdatedChange = (event) => {
+        setEditedItem(event.target.value);
+    }
+    // 체크박스 변경 감지
+    const handleCheckedChange = (todoId) => {
+        const updatedTodoItem = todoItems.map((todo) =>{
+            if (todo.id === todoId) {
+                todo.isCompleted = !todo.isCompleted;
+            } 
+        });
+            
         setTodoItems(updatedTodoItem);
-        
+        handleTodoUpdated(todoId);
+    }
+
+    // 할 일 수정 및 완료된 할 일 처리
+    const handleTodoUpdated = async (todoId) => {
         try{
+            const updatedTodoItem = todoItems.map((todo) =>
+                todo.id === todoId 
+                ? { ...todo, 
+                    isCompleted: todo.isCompleted,
+                    todo: !editedItem ? todo.todo : editedItem
+                } : todo             
+            );
+            setTodoItems(updatedTodoItem);
+            
+            console.log("isCompleted", todoId.isCompleted)
             // API 엔드포인트와 요청 데이터
             const apiUrl = `/todos/${todoId}`;
             const requestData = {
@@ -43,7 +76,7 @@ function TodoList(){
                 isCompleted: updatedTodoItem.find(todo => todo.id === todoId).isCompleted,
             };
 
-            // isCompleted 값 변경을 위한 API 요청
+            // 값 변경을 위한 API 요청
             const response = await fetch(apiUrl, {
                 method: 'PUT',
                 headers: {
@@ -62,7 +95,6 @@ function TodoList(){
     const handleTodoDelete = async (todoId) => {
         try {
             const apiUrl = `/todos/${todoId}`;
-
             const response = await fetch(apiUrl, {
                 method: 'DELETE',
                 headers: {
@@ -81,29 +113,96 @@ function TodoList(){
         }
     }
 
-    return (
-        <TodoListWrapper>
-            <h1>Todo List</h1>
-            <TodoItems>
-               {todoItems.map((todo) =>(
-                    <TodoItem key={todo.id}>
-                        <label>
-                            <input type='checkbox'
-                                   checked={todo.isCompleted}
-                                   onChange={() => handleTodoComplete(todo.id)}
-                            />
-                            <span>{todo.todo}</span>
-                        </label>
-                        <button data-testid="modify-button">수정</button>
-                        <button 
-                            data-testid="delete-button"
-                            onClick={() => handleTodoDelete(todo.id)}>삭제</button>
-                    </TodoItem>
-                ))} 
-            </TodoItems>
-            
-        </TodoListWrapper>
-    );
+    console.log("isEditing", isEditing);
+    if(isEditing && editedItemId){
+        return (
+            <TodoListWrapper>
+                <h1>Todo List</h1>
+                <TodoItems>
+                    {todoItems.map((todo) => (
+                        todo.id === editedItemId ? (
+                            <TodoItem key={todo.id}>
+                                <label>
+                                    <input
+                                        type='checkbox'
+                                        checked={todo.isCompleted}
+                                        onChange={() => handleCheckedChange()}
+                                        disabled={isEditing}
+                                    />
+                                </label>
+                                <form onSubmit={handleTodoUpdated}>
+                                    <input
+                                        data-testid="modify-input"
+                                        value={editedItem}
+                                        onChange={handleUpdatedChange}
+                                    />
+                                    <button
+                                        data-testid="submit-button"
+                                        type='submit'
+                                        disabled={!editedItem.trim()}
+                                        onClick={() => handleTodoUpdated(todo.id)}
+                                    >제출</button>
+                                    <button
+                                        data-testid="cancel-button"
+                                        onClick={() => setIsEditing(false)}
+                                    >취소</button>
+                                </form>
+                            </TodoItem>
+                        ) : (
+                            <TodoItem key={todo.id}>
+                                <label>
+                                    <input
+                                        type='checkbox'
+                                        checked={todo.isCompleted}
+                                        onChange={() => handleCheckedChange(todo.id)}
+                                    />
+                                    <span>{todo.todo}</span>
+                                </label>
+                                <button
+                                    data-testid="modify-button"
+                                    type='button'
+                                    onClick={() => handleTodoEdit(todo.id)}
+                                >수정</button>
+                                <button
+                                    data-testid="delete-button"
+                                    onClick={() => handleTodoDelete(todo.id)}
+                                >삭제</button>
+                            </TodoItem>
+                        )
+                    ))}
+                </TodoItems>
+                
+            </TodoListWrapper>
+        );
+    } else {
+        return (
+            <TodoListWrapper>
+                <h1>Todo List</h1>
+                <TodoItems>
+                   {todoItems.map((todo) =>(
+                        <TodoItem key={todo.id}>
+                            <label>
+                                <input type='checkbox'
+                                    checked={todo.isCompleted}
+                                    onChange={() => handleCheckedChange(todo.id)}
+                                />
+                                <span>{todo.todo}</span>
+                            </label>
+                            <button data-testid="modify-button"
+                                    type='submit'
+                                    onClick={() => handleTodoEdit(todo.id)}
+                            >수정</button>
+                            <button data-testid="delete-button"
+                                    onClick={() => handleTodoDelete(todo.id)}
+                            >삭제</button>
+                        </TodoItem>
+                    ))} 
+                </TodoItems>
+                
+            </TodoListWrapper>
+        );
+    }
+    
 };
 
 const TodoListWrapper = styled.div`

@@ -29,11 +29,35 @@ function TodoList(){
       }, [userToken, navigate]);
     
     // 완료된 할 일 처리
-    const handleTodoComplete = (todoId) => {
+    const handleTodoComplete = async (todoId) => {
+        console.log(todoId);
         const updatedTodoItem = todoItems.map((todo) => 
             todo.id === todoId ? { ...todo, isCompleted: !todo.isCompleted } : todo
         );
         setTodoItems(updatedTodoItem);
+        
+        try{
+            // API 엔드포인트와 요청 데이터
+            const apiUrl = `/todos/${todoId}`;
+            const requestData = {
+                todo: updatedTodoItem.find(todo => todo.id === todoId).todo,
+                isCompleted: updatedTodoItem.find(todo => todo.id === todoId).isCompleted,
+            };
+
+            // isCompleted 값 변경을 위한 API 요청
+            const response = await fetch(apiUrl, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `Bearer ${userToken}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(requestData), 
+            });
+
+        } catch (error){
+            console.log(error.message);
+        }
+        
     }
 
     return (
@@ -45,7 +69,8 @@ function TodoList(){
                         <label>
                             <input type='checkbox'
                                    checked={todo.isCompleted}
-                                   onChange={() => handleTodoComplete(todo.id)}/>
+                                   onChange={() => handleTodoComplete(todo.id)}
+                            />
                             <span>{todo.todo}</span>
                         </label>
                     </TodoItem>

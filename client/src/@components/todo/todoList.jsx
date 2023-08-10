@@ -30,7 +30,6 @@ function TodoList(){
     
     // 완료된 할 일 처리
     const handleTodoComplete = async (todoId) => {
-        console.log(todoId);
         const updatedTodoItem = todoItems.map((todo) => 
             todo.id === todoId ? { ...todo, isCompleted: !todo.isCompleted } : todo
         );
@@ -56,8 +55,30 @@ function TodoList(){
 
         } catch (error){
             console.log(error.message);
+        }  
+    }
+
+    // 할 일 삭제
+    const handleTodoDelete = async (todoId) => {
+        try {
+            const apiUrl = `/todos/${todoId}`;
+
+            const response = await fetch(apiUrl, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${userToken}`,
+                },
+            });
+
+            if (response.status === 204) {
+                const deletedTodoItem = todoItems.filter(todo => todo.id !== todoId);
+                setTodoItems(deletedTodoItem);
+            } else{
+                console.log("삭제 실패");
+            }
+        } catch(error){
+            console.log(error.message);
         }
-        
     }
 
     return (
@@ -73,6 +94,10 @@ function TodoList(){
                             />
                             <span>{todo.todo}</span>
                         </label>
+                        <button data-testid="modify-button">수정</button>
+                        <button 
+                            data-testid="delete-button"
+                            onClick={() => handleTodoDelete(todo.id)}>삭제</button>
                     </TodoItem>
                 ))} 
             </TodoItems>

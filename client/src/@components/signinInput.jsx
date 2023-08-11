@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
+import EmailIcon from '../assets/email.png';
+import PasswordIcon from '../assets/password.png';
+import SigninLogo from '../assets/login.png';
 
 function SigninInput(){
     const [email, setEmail] = useState('');
@@ -74,41 +77,49 @@ function SigninInput(){
     return(
         <>
             <SigninInputWrapper>
-                <h1>login</h1>
-                <form onSubmit={handleSignIn}>
-                    <div>
-                        <h3>Email</h3> {''}
-                        <input data-testid="email-input"
-                                type="email"
-                                name="user-email"
-                                value={email}
-                                required
-                                onChange={handleEmailChange}
-                                placeholder='이메일을 입력해주세요' />
-                        {email.length > 0 && <span className={`message ${isEmail ? 'success' : 'error'}`}>{emailMessage}</span>}
-
-                    </div>
-                    <div>
-                        <h3>Password</h3>{''}
-                        <input data-testid="password-input"
-                                type='password'
-                                name="user-password"
-                                value={password}
-                                required
-                                onChange={handlePasswordChange}
-                                placeholder='비밀번호를 입력해주세요' />
-                        {password.length > 0 && (
-                        <span className={`message ${password ? 'success' : 'error'}`}>{passwordMessage}</span>
-                        )}
-                    </div>
-
-                    <div>
-                        <button data-testid="signin-button" 
-                                type="submit"
-                                disabled={!(isEmail && isPassword)}> 
-                                로그인 </button>
-                    </div>
-                </form>
+                <SigninInputBox>
+                    <img src={SigninLogo} alt='Signin Logo' width={130} height={30}/>
+                    <form onSubmit={handleSignIn}>
+                        <DataInput>
+                            <img src={EmailIcon} alt="Email icon" width={30} height={20} style={{ margin: '0 10px' }}/>
+                            {''}
+                            <input data-testid="email-input"
+                                    type="email"
+                                    name="user-email"
+                                    value={email}
+                                    required
+                                    onChange={handleEmailChange}
+                                    placeholder='이메일을 입력해주세요' />
+                            <span></span>
+                        </DataInput>
+                        <DataValidate isError={!isEmail}>
+                            {email.length > 0 && <span className={`message ${isEmail ? 'success' : 'error'}`}>{emailMessage}</span>}
+                        </DataValidate>
+                        <DataInput>
+                            <img src={PasswordIcon} alt='Password Icon' width={23} height={27} style={{ margin: '0 13px' }}/>
+                            {''}
+                            <input data-testid="password-input"
+                                    type='password'
+                                    name="user-password"
+                                    value={password}
+                                    required
+                                    onChange={handlePasswordChange}
+                                    placeholder='비밀번호를 입력해주세요' />
+                            <span></span>
+                        </DataInput>
+                        <DataValidate isError={!isPassword}>
+                            {password.length > 0 && (
+                                <span className={`message ${isPassword ? 'success' : 'error'}`}>{passwordMessage}</span>
+                                )}
+                        </DataValidate>
+                        <DataButton>
+                            <button data-testid="signin-button" 
+                                    type="submit"
+                                    disabled={!(isEmail && isPassword)}> 
+                                    login </button>
+                        </DataButton>
+                    </form>
+                </SigninInputBox>
             </SigninInputWrapper>
             
         </>
@@ -121,10 +132,92 @@ const SigninInputWrapper = styled.div`
     align-items: center;
     width: 100%;
     height: 100vh;
+    background-color: #f7f7f7;
 
     form {
         display: flex;
         flex-direction: column;
     }
+`
+
+const SigninInputBox = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 40rem;
+    height: 40rem;
+    padding: 4rem 2rem;
+
+    background-color: white;
+    border-radius: 1.5rem;
+    box-shadow: #cecece 2px 3px 5px;
+`
+
+const DataInput = styled.div`
+    display: flex;
+    align-items: center;
+    margin: 5rem 0 0 1rem;
+
+    input {
+        width: 20rem;
+        padding: 1rem 2rem 0.7rem 0.2rem;
+        border-bottom: 1.5px solid #cfcfcf;
+        transition: border-color 0.4s;
+    }
+
+    input:focus {
+        border-color: orange;
+    }
+
+    input ~ span {
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        width: 0;
+        height: 2px;
+        transition: width 0.4s, left 0.4s;
+    }
+
+    input:focus ~ span{
+        width: 100%; 
+        left: 0;
+    }
+`
+
+const DataValidate = styled.div`
+    margin: 0.5rem 0 0 4rem;
+    
+    span {
+        font-size: 1.2rem;
+        font-weight: 500;
+        color: ${props => props.isError ? '#e33232' : 'grey'};
+    }
+`
+
+const DataButton = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    button{
+        padding: 1.5rem 3rem;
+        margin: 4rem 0;
+        border-radius: 1.5rem;
+        background-color: orange;
+        color: white;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.2rem;
+        transition: background-color 0.3s, color 0.3s;
+    }
+
+    button:hover{
+        background-color: #e77401;
+        color: white;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.2rem;
+    }
+    
 `
 export default SigninInput

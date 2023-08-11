@@ -1,6 +1,10 @@
 import React, { useState, useEffect} from 'react';
 import styled from 'styled-components';
 import { useNavigate } from "react-router-dom";
+import CancelIcon from '../../assets/cancel.png';
+import EditIcon from '../../assets/edit.png';
+import DeleteIcon from '../../assets/delete.png';
+import AddIcon from '../../assets/add.png';
 
 function TodoList(props){
     const [todoItems, setTodoItems] = useState([]);
@@ -115,11 +119,10 @@ function TodoList(props){
     if(isEditing && editedItemId){
         return (
             <TodoListWrapper>
-                <h1>Todo List</h1>
                 <TodoItems>
                     {todoItems.map((todo) => (
                         todo.id === editedItemId ? (
-                            <TodoItem key={todo.id}>
+                            <TodoEditItem key={todo.id} checked={todo.isCompleted}>
                                 <label>
                                     <input
                                         type='checkbox'
@@ -128,26 +131,34 @@ function TodoList(props){
                                         disabled={isEditing}
                                     />
                                 </label>
-                                <form onSubmit={handleTodoUpdated}>
-                                    <input
-                                        data-testid="modify-input"
-                                        value={editedItem}
-                                        onChange={handleUpdatedChange}
-                                    />
-                                    <button
-                                        data-testid="submit-button"
-                                        type='submit'
-                                        disabled={!editedItem.trim()}
-                                        onClick={() => handleTodoUpdated(todo.id)}
-                                    >제출</button>
-                                    <button
-                                        data-testid="cancel-button"
-                                        onClick={() => setIsEditing(false)}
-                                    >취소</button>
-                                </form>
-                            </TodoItem>
+                                <TodoEditInputBox>
+                                    <form onSubmit={handleTodoUpdated}>
+                                        <input
+                                            data-testid="modify-input"
+                                            value={editedItem}
+                                            onChange={handleUpdatedChange}
+                                        />
+                                        
+                                        <button
+                                            data-testid="submit-button"
+                                            type='submit'
+                                            disabled={!editedItem.trim()}
+                                            onClick={() => handleTodoUpdated(todo.id)}
+                                        >
+                                        <img src={AddIcon} alt='Add Icon'width={20} height={20}/>
+                                        </button>
+                                        <button
+                                            data-testid="cancel-button"
+                                            onClick={() => setIsEditing(false)}
+                                        >
+                                        <img src={CancelIcon} alt='Cancel Icon' width={18} height={18}/>
+                                        </button>
+                                        
+                                    </form>
+                                </TodoEditInputBox>
+                            </TodoEditItem>
                         ) : (
-                            <TodoItem key={todo.id}>
+                            <TodoItem key={todo.id} checked={todo.isCompleted}>
                                 <label>
                                     <input
                                         type='checkbox'
@@ -156,15 +167,20 @@ function TodoList(props){
                                     />
                                     <span>{todo.todo}</span>
                                 </label>
-                                <button
-                                    data-testid="modify-button"
-                                    type='button'
-                                    onClick={() => handleTodoEdit(todo.id)}
-                                >수정</button>
-                                <button
-                                    data-testid="delete-button"
-                                    onClick={() => handleTodoDelete(todo.id)}
-                                >삭제</button>
+                                <TodoButton>
+                                    <button
+                                        data-testid="modify-button"
+                                        type='button'
+                                        onClick={() => handleTodoEdit(todo.id)}
+                                    ><img src={EditIcon} alt='Edit Icon' width={20} height={20}/>
+                                    </button>
+                                    <button
+                                        data-testid="delete-button"
+                                        onClick={() => handleTodoDelete(todo.id)}
+                                    >
+                                    <img src={DeleteIcon} alt='Delete Icon' width={20} height={20}/>
+                                    </button>
+                                </TodoButton>
                             </TodoItem>
                         )
                     ))}
@@ -175,10 +191,9 @@ function TodoList(props){
     } else {
         return (
             <TodoListWrapper>
-                <h1>Todo List</h1>
                 <TodoItems>
                    {todoItems.map((todo) =>(
-                        <TodoItem key={todo.id}>
+                        <TodoItem key={todo.id} checked={todo.isCompleted}>
                             <label>
                                 <input type='checkbox'
                                     checked={todo.isCompleted}
@@ -186,13 +201,20 @@ function TodoList(props){
                                 />
                                 <span>{todo.todo}</span>
                             </label>
-                            <button data-testid="modify-button"
-                                    type='submit'
-                                    onClick={() => handleTodoEdit(todo.id)}
-                            >수정</button>
-                            <button data-testid="delete-button"
-                                    onClick={() => handleTodoDelete(todo.id)}
-                            >삭제</button>
+                            <TodoButton>
+                                 <button data-testid="modify-button"
+                                        type='submit'
+                                        onClick={() => handleTodoEdit(todo.id)}
+                                >
+                                <img src={EditIcon} alt='Edit Icon'/>
+                                </button>
+                                <button data-testid="delete-button"
+                                        onClick={() => handleTodoDelete(todo.id)}
+                                >
+                                <img src={DeleteIcon} alt='Delete Icon'/>
+                                </button>
+                            </TodoButton>
+                           
                         </TodoItem>
                     ))} 
                 </TodoItems>
@@ -204,15 +226,136 @@ function TodoList(props){
 };
 
 const TodoListWrapper = styled.div`
-  
+    display: flex;
+    flex-direction: column;
+    margin: 3rem 0 0 0;
 `;
 
-const TodoItems = styled.ul`
-  
-`;
+const TodoItems = styled.ul``;
 
 const TodoItem = styled.li`
-  
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    width: 40rem;
+    height: 5.5rem;
+    background-color: white;
+    border: 0.5px solid orange;
+    border-radius: 1.5rem;
+    margin: 2rem 0;
+    padding: 0 2rem;
+
+    transition: transform 0.3s;
+
+    &:hover {
+        transform: scale(1.05);
+    }
+
+    label {
+        display: flex;
+        align-items: center;
+    }
+
+    span {
+        font-size: 1.4rem;
+        font-weight: 480;
+        text-decoration: ${props => props.checked ? 'line-through' : 'none'};
+        color: ${props => props.checked ? '#888888' : 'inherit'};
+    }
+
+    input[type="checkbox"] {
+        border: 1px solid #cecece;
+        border-radius: 5px;
+        width: 15px;
+        height: 15px;
+        margin: 0 1.3rem 0 0;
+        cursor: pointer;
+        background-color: transparent;
+        outline: none;
+    }
+
+    input[type="checkbox"]:checked {
+        border-color: transparent;
+        background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M5.707 7.293a1 1 0 0 0-1.414 1.414l2 2a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0-1.414-1.414L7 8.586 5.707 7.293z'/%3e%3c/svg%3e");
+        background-size: 100% 100%;
+        background-position: 50%;
+        background-repeat: no-repeat;
+        background-color: orange;
+    }
 `;
+
+const TodoButton = styled.div`
+    img {
+        width: 1.9rem;
+        height: 1.9rem;
+    }
+    button {
+        margin: 0 0.3rem;
+    }
+`
+const TodoEditItem = styled.div`
+    display: flex;
+    align-items: center;
+
+    width: 40rem;
+    height: 5.5rem;
+    background-color: white;
+    border: 0.5px solid orange;
+    border-radius: 1.5rem;
+    margin: 2rem 0;
+    padding: 0 2rem;
+
+    transition: transform 0.3s;
+
+    &:hover {
+        transform: scale(1.05);
+    }
+
+    label {
+        display: flex;
+        align-items: center;
+    }
+
+    span {
+        font-size: 1.4rem;
+        font-weight: 480;
+        text-decoration: ${props => props.checked ? 'line-through' : 'none'};
+        color: ${props => props.checked ? '#888888' : 'inherit'};
+    }
+
+    input[type="checkbox"] {
+        border: 1px solid #cecece;
+        border-radius: 5px;
+        width: 15px;
+        height: 15px;
+        margin: 0 1.3rem 0 0;
+        cursor: pointer;
+        background-color: transparent;
+        outline: none;
+    }
+
+    input[type="checkbox"]:checked {
+        border-color: transparent;
+        background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M5.707 7.293a1 1 0 0 0-1.414 1.414l2 2a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0-1.414-1.414L7 8.586 5.707 7.293z'/%3e%3c/svg%3e");
+        background-size: 100% 100%;
+        background-position: 50%;
+        background-repeat: no-repeat;
+        background-color: orange;
+    }
+`
+
+const TodoEditInputBox = styled.div`
+    input {
+        margin: 0 14rem 0 0;
+    }
+
+    button {
+        img{
+            margin: 0 3px 0 2px ;
+        }
+        
+    }
+`
 
 export default TodoList

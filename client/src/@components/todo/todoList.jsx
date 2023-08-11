@@ -324,6 +324,11 @@ const TodoEditItem = styled.div`
         color: ${props => props.checked ? '#888888' : 'inherit'};
     }
 
+    input {
+        font-size: 1.4rem;
+        font-weight: 480;
+    }
+
     input[type="checkbox"] {
         border: 1px solid #cecece;
         border-radius: 5px;
@@ -347,12 +352,12 @@ const TodoEditItem = styled.div`
 
 const TodoEditInputBox = styled.div`
     input {
-        margin: 0 14rem 0 0;
+        margin: 0 12.7rem 0 0;
     }
 
     button {
         img{
-            margin: 0 3px 0 2px ;
+            margin: 0 4px ;
         }
         
     }

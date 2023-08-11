@@ -190,6 +190,7 @@ const DataValidate = styled.div`
     span {
         font-size: 1.2rem;
         font-weight: 500;
+        margin: 0 0 0 2rem;
         color: ${props => props.isError ? '#e33232' : 'grey'};
     }
 `

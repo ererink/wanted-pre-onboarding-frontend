@@ -18,18 +18,18 @@
 <br>
 
 ## 1. 회원가입
-<img width='70%' src='./client/src/assets/회원가입.gif'/>
+<img width='80%' src='./client/src/assets/회원가입.gif'/>
 
 ## 2. 로그인
-<img width='70%' src='./client/src/assets/로그인.gif'/>
+<img width='80%' src='./client/src/assets/로그인.gif'/>
 
 ## 3. To Do List
 
 ### 3-1. To-do 추가
-<img width='70%' src='./client/src/assets/추가.gif'/>
+<img width='80%' src='./client/src/assets/추가.gif'/>
 
 ### 3-2. To-do 완료 처리 및 수정
-<img width='70%' src='./client/src/assets/완료수정.gif'/>
+<img width='80%' src='./client/src/assets/완료수정.gif'/>
 
 ### 3-3. To-do 삭제
-<img width='70%' src='./client/src/assets/삭제.gif'/>
+<img width='80%' src='./client/src/assets/삭제.gif'/>

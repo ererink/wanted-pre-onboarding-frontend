@@ -58,15 +58,20 @@ function SigninInput(){
                 body: JSON.stringify({ email, password }),
             });
 
-            const responseData = await response.json();
-            if (response.status === 200 && responseData.access_token){
-                // 로그인 시 로컬 스토리지에 토큰 저장
-                localStorage.setItem('jwt-token', responseData.access_token);
-                console.log(responseData);
-                window.alert("로그인 성공!");
+            if (response.status === 200){
+                const responseData = await response.json();
+                if(responseData.access_token) {
+                    // 로그인 시 로컬 스토리지에 토큰 저장
+                    localStorage.setItem('jwt-token', responseData.access_token);
+                    console.log(responseData);
+                    window.alert("로그인이 되었습니다!");
 
-                // 로그인 성공시 /todo 페이지로 이동            
-                navigate('/todo');
+                    // 로그인 성공시 /todo 페이지로 이동            
+                    navigate('/todo');
+                } 
+            } else if (response.status === 404) {
+                // DB에 해당 유저 정보가 없는 경우
+                window.alert("로그인 정보가 없습니다 :(");
             }
                 
         } catch (error) {

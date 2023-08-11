@@ -53,6 +53,7 @@ function TodoList(props){
             if (todo.id === todoId) {
                 todo.isCompleted = !todo.isCompleted;
             } 
+            return todo;
         });
             
         setTodoItems(updatedTodoItem);
